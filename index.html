@@ -57,7 +57,7 @@ const card=(k,t,d)=>`<section class="card"><h2>${t}</h2><p class="muted">${d}</p
 <label class="drop" id="drop-${k}"><input type="file" accept="audio/*" id="f-${k}" ${k==='src'?'multiple':''} hidden><span id="n-${k}">Drop an audio file here or click to load</span></label>
 <div class="stats" id="st-${k}"></div>
 <div class="row"><label>BPM <input type="number" id="b-${k}" step="0.01" min="40" max="240"></label><label>Nudge ms <input type="number" id="nu-${k}" step="1" value="0"></label><button class="alt" id="rg-${k}">Re-grid</button><button class="alt" id="hf-${k}">½</button><button class="alt" id="db-${k}">×2</button><button class="alt" id="p-${k}">▶ Play</button><button class="alt" id="fw-${k}" title="Tracks tempo drift and swing, then retimes the audio onto a straight grid">Follow tempo/swing</button></div>
-<canvas id="cv-${k}"></canvas><div class="leg">Green lines: beat 1 of each bar. Cream lines: beats 5, 9, 13. Dots: kick (large) and hat/snare (small). Top strip: structure.</div><div class="secs" id="sec-${k}"></div></section>`;
+<canvas id="cv-${k}"></canvas><div class="leg">Green lines: beat 1 of each bar. Cream lines: beats 5, 9, 13. Dots: kick (large) and hat/snare (small). Top strip: structure.</div></section>`;
 $('#cards').innerHTML=card('src','1 · Source audio',"The material to slice up. It might say page not responding or something like that, don't panic, it's working its magic.")+card('tgt','2 · Target audio','The structure to imitate.');
 const COL={silence:'#2A2B2E',fade:'#F4F1EA','break':'#52C5E0',groove:'#00A86B',full:'#D20707'};
 function prep(ch,sr){const n=ch[0].length,m=new Float32Array(n);for(const c of ch)for(let i=0;i<n;i++)m[i]+=c[i]/ch.length;
@@ -87,7 +87,7 @@ r[i]=Math.sqrt(s/(b-a||1));lf[i]=Math.sqrt(l)/(Math.sqrt(l)+Math.sqrt(hh)+1e-9);
 {let s2=0,c2=0;for(let tt=d0;tt<A.n/sr-.05;tt+=bt){const f=Math.round((tt*sr-384)/512);let v=0;for(let d=-1;d<=1;d++)v=Math.max(v,A.fAll[f+d]||0);s2+=v;c2++}const so=Float32Array.from(A.fAll).sort();A.fit=Math.min(1,s2/(c2||1)/(so[Math.floor(so.length*.9)]||1))}
 A.r=r;A.lf=lf;A.zc=zc;A.at=at;A.maxR=Math.max(...r)||1;A.dn=Array.from(r,v=>20*Math.log10(v/A.maxR+1e-3)/60);structure(A);
 const nb=Math.ceil((A.pos0+A.ns)/16);$('#st-'+k).innerHTML=`<span>Tempo <b>${bpm.toFixed(2)} BPM</b></span><span>Bars <b>${nb}</b></span><span>16th slices <b>${A.ns}</b></span><span>First downbeat <b>${d0.toFixed(2)}s</b></span><span>Length <b>${(A.n/sr).toFixed(1)}s</b></span><span>Grid fit <b>${(A.fit*100|0)}%</b>${A.fit<.5?' · low: tempo may drift or swing, try ½/×2, Nudge or a manual BPM':''}</span>`;
-$('#sec-'+k).innerHTML=A.segs.map(s=>`<span class="chip" style="border-color:${COL[s.l.split('-')[0]]||COL.fade}">Bars ${s.a+1}–${s.b+1} · ${s.l}</span>`).join('');bandFeat(A);draw(k)}
+const _sec=$('#sec-'+k);if(_sec)_sec.innerHTML=A.segs.map(s=>`<span class="chip" style="border-color:${COL[s.l.split('-')[0]]||COL.fade}">Bars ${s.a+1}–${s.b+1} · ${s.l}</span>`).join('');bandFeat(A);draw(k)}
 function structure(A){const nb=Math.ceil((A.pos0+A.ns)/16),br=[],bl=[];for(let b=0;b<nb;b++){const a=Math.max(0,b*16-A.pos0),e=Math.min(A.ns,(b+1)*16-A.pos0);let s=0,l=0;for(let i=a;i<e;i++){s+=A.r[i];l+=A.lf[i]}br.push(s/(e-a||1));bl.push(l/(e-a||1))}
 const so=[...br].sort((x,y)=>x-y),ref=so[Math.floor(so.length*.9)]||1,ml=[...bl].sort((x,y)=>x-y)[bl.length>>1];
 const lab=br.map((v,b)=>{const rel=v/ref;return rel<.08?'silence':(rel<.45||bl[b]<.35*ml)?'break':rel>=.8?'full':'groove'});
