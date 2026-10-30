@@ -124,7 +124,7 @@ const c0=R.buf.getChannelData(0),c1=R.buf.getChannelData(1);for(let i=0;i<L;i++)
 const a=document.createElement('a');a.href=URL.createObjectURL(new Blob([d],{type:'audio/wav'}));a.download='beat-mosaic-result.wav';a.click()}
 function build2(){const s=S.src,t=S.tgt;if(!s||!t){$('#msg').textContent='Load both files first.';return}$('#msg').textContent='Building layers…';
 setTimeout(async()=>{const sr=t.sr,n=t.n,env=+$('#p-env').value,pw=+$('#p-pos').value,cw=+$('#p-con').value,rw=+$('#p-rep').value;
-const USE_FORMANT=$('#p-formant').checked;if(USE_FORMANT&&!FORMANT_FN){try{const m=await import('https://esm.sh/@audio/shift');FORMANT_FN=m.formant||m.default?.formant||m.default;console.log('formant loaded',!!FORMANT_FN)}catch(e){console.error('formant load failed',e);$('#msg').textContent='Formant module failed to load: '+e.message;return}}
+const USE_FORMANT=$('#p-formant').checked;if(USE_FORMANT&&!FORMANT_FN){try{const m=await import('https://cdn.jsdelivr.net/npm/@audio/shift/+esm');FORMANT_FN=m.formant||m.default?.formant||m.default;console.log('formant loaded',!!FORMANT_FN, Object.keys(m))}catch(e){console.error('formant load failed',e);$('#msg').textContent='Formant module failed to load: '+e.message;return}}
 const D=+$('#p-res').value||1;for(const A of[s,t])if(A.D!==D)bandFeat(A,D);for(const A of[s,t])if(!A.re)A.re=A.m.map((v,i)=>v-A.lo[i]);
 if(!s.lc){s.lc=s.ch.map(c=>lp(c,sr));s.rc=s.ch.map((c,q)=>c.map((v,u)=>v-s.lc[q][u]))}
 const out=[new Float32Array(n),new Float32Array(n)],uL=new Float32Array(s.ns*D),uH=new Float32Array(s.ns*D),uq=new Set();let pL=-9,pH=-9;PK=[];RP=$('#p-mir').checked?reps(t,+$('#p-thr').value):[];
