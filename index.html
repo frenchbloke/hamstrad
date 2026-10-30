@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>HAMSTRAD</title>
+<style>
+:root{--bg:#F4F1EA;--panel:#F4F1EA;--panel2:#F4F1EA;--ink:#2A2B2E;--mut:#2A2B2E;--acc:#00A86B;--acc2:#52C5E0;--line:#2A2B2E;--cv:#2A2B2E;--wf:#F4F1EA;--cl:#52C5E0;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px);color-scheme:light}
+@media(prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#2A2B2E;--panel:#2A2B2E;--panel2:#2A2B2E;--ink:#F4F1EA;--mut:#F4F1EA;--line:#52C5E0;color-scheme:dark}}
+html{scroll-padding-top:env(safe-area-inset-top,0px)}
+*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--ink);font:15px/1.5 system-ui,-apple-system,"Segoe UI",sans-serif}
+main{max-width:1000px;margin:0 auto;padding:20px 14px 60px}
+h1{font-size:24px;margin:0 0 4px;letter-spacing:-.02em}h2{font-size:16px;margin:0 0 2px}
+.muted{color:var(--mut);font-size:13px;margin:0 0 10px}
+.card{background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:14px;margin:14px 0}
+.drop{display:block;border:1.5px dashed var(--line);border-radius:8px;padding:12px;text-align:center;cursor:pointer;margin-bottom:10px}
+.drop.on{border-color:var(--acc)}
+.stats{display:flex;flex-wrap:wrap;gap:6px 16px;font-size:13px;margin-bottom:8px;font-variant-numeric:tabular-nums}
+.stats b{color:var(--acc)}
+.row{display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin:8px 0}
+button{background:var(--ink);color:var(--bg);border:0;border-radius:7px;padding:7px 12px;font:inherit;font-size:13px;cursor:pointer}
+button.alt{background:var(--panel2);color:var(--ink);border:1px solid var(--line)}button:disabled{opacity:.4}
+input[type=number]{width:84px;padding:5px;border-radius:6px;border:1px solid var(--line);background:var(--panel2);color:var(--ink)}
+canvas{width:100%;height:150px;display:block;border-radius:8px}#cv-cmp{height:190px}
+.secs{display:flex;flex-wrap:wrap;gap:5px;margin-top:8px;font-size:12px}
+.chip{padding:2px 8px;border-radius:99px;border:1px solid var(--line)}
+.sl{display:grid;grid-template-columns:repeat(auto-fit,minmax(210px,1fr));gap:8px 18px;font-size:13px}
+.sl input{width:100%}.leg{font-size:12px;color:var(--mut);margin-top:4px}
+.score{display:flex;gap:18px;flex-wrap:wrap;font-size:14px}.score b{font-size:20px;color:var(--acc)}
+main::before{content:"";display:block;height:6px;border-radius:3px;margin-bottom:14px;background:linear-gradient(90deg,#00A86B 0 33.3%,#D20707 33.3% 66.6%,#52C5E0 66.6%)}
+#build{background:#00A86B;color:#2A2B2E;font-weight:700}
+input[type=range],input[type=checkbox]{accent-color:#00A86B}
+.card{border-top:3px solid #00A86B}
+canvas{border:1.5px solid var(--ink)}.muted,.leg{opacity:.85}
+</style></head><body><main>
+<h1 aria-label="HAMSTRAD" style="margin:0 0 10px"><svg viewBox="0 0 892 387.422" role="img" style="width:min(460px,100%);height:auto;display:block;border-radius:6px"><title>HAMSTRAD</title><rect width="892" height="387.422" fill="#2A2B2E"/><polygon transform="translate(104 0)" fill="#D20707" points="546.772,0 346.195,387.422 502.421,387.422 702.998,0 "/><polygon fill="#F4F1EA" points="32.063,144.282 69.469,144.282 69.469,203.6 93.469,203.6 93.469,144.282 130.875,144.282 130.875,336.655 93.469,336.655 93.469,239.8 69.469,239.8 69.469,336.655 32.063,336.655"/><g transform="translate(104 0)"><path fill="#F4F1EA" d="M662.626,336.655h72.366c14.068,0,23.82-9.618,23.82-23.499V167.78c0-13.879-9.752-23.499-23.82-23.499 h-72.366V336.655z M705.375,305.034V175.902h0.146c9.392,0,10.541,6.453,10.541,15.777v97.577c0,9.325-1.149,15.777-10.541,15.777 H705.375z"/><path fill="#F4F1EA" d="M531.932,243.14c14.066,0,23.818-9.619,23.818-23.499v-51.86c0-13.879-9.752-23.499-23.818-23.499h-72.369 v98.858v93.516h42.752v-75.251h0.147c9.39,0,10.539,6.452,10.539,15.777v59.474h42.75v-70.017 C555.75,252.759,545.998,243.14,531.932,243.14z M502.314,175.902h0.147c9.39,0,10.539,6.453,10.539,15.777v17.422 c0,9.326-1.31,15.923-10.686,15.923V175.902z"/><path fill="#F4F1EA" d="M344.898,336.655c14.068,0,23.82-9.618,23.82-23.499v-62.668c-0.16-18.877-53.437-40.078-53.437-40.078 v-32.061c0-2.953,2.392-5.345,5.344-5.345c2.953,0,5.344,2.392,5.344,5.345l0.041,32.061h42.708v-43.298 c0-13.879-9.751-23.499-23.82-23.499h-48.547c-14.067,0-23.82,9.619-23.82,23.499v51.982c0.173,18.865,53.437,40.078,53.437,40.078 v42.752c0,2.95-2.391,5.342-5.344,5.342c-2.952,0-5.344-2.392-5.344-5.342l-0.04-42.752h-42.71v53.984 c0,13.881,9.752,23.499,23.82,23.499H344.898z"/><path fill="#F4F1EA" d="M57.445,144.282L32.063,336.655h37.406l3.3-37.405h17.446l3.301,37.405h37.407L105.54,144.282h-1.336 H58.781H57.445z M75.36,269.858l6.132-69.468l6.133,69.468H75.36z"/><path fill="#F4F1EA" d="M583.805,144.282l-25.383,192.373h37.407l3.3-37.405h17.445l3.301,37.405h37.408l-25.387-192.373h-1.334 h-45.421H583.805z M601.719,269.858l6.133-69.468l6.133,69.468H601.719z"/><polygon fill="#F4F1EA" points="392.766,176.344 392.766,336.655 435.518,336.655 435.518,176.344 454.219,176.344 454.219,144.282 371.391,144.282 371.391,176.344 "/><polygon fill="#F4F1EA" points="227.109,240.469 227.109,336.655 264.517,336.655 264.517,144.282 211.079,144.282 200.391,221.231 189.703,144.282 136.266,144.282 136.266,336.655 173.672,336.655 173.672,240.469 187.031,336.655 213.75,336.655 "/></g></svg></h1>
+<p class="muted">in which we try to turn one thing into something else by taking it to pieces and glueing it back together</p>
+<div id="cards"></div>
+<section class="card"><h2>3 · glued together and hope for the best</h2>
+<p class="muted">Each target sixteenth is replaced by the source slice whose timbre, attack, loudness and bar position fit best, then gain-shaped to follow the target envelope.</p>
+<div class="sl">
+<label>Envelope match <input type="range" id="p-env" min="0" max="1" step=".05" value=".85"></label>
+<label>Bar-position strictness <input type="range" id="p-pos" min="0" max="1" step=".05" value=".6"></label>
+<label>Phrase continuity <input type="range" id="p-con" min="0" max="1" step=".05" value=".3"></label>
+<label>Avoid repeats <input type="range" id="p-rep" min="0" max="1" step=".05" value=".3"></label>
+<label>Stretch when WSOLA is off: 0 keeps pitch, 1 locks to grid <input type="range" id="p-str" min="0" max="1" step=".05" value="1"></label>
+<label>Slice detail <select id="p-res"><option value="1">16th notes</option><option value="2">32nd notes</option></select></label>
+<label><input type="checkbox" id="p-mir" checked> Mirror repeated bars</label>
+<label><input type="checkbox" id="p-ps" checked> Pitch-preserving stretch (WSOLA)</label>
+<label>Repeat tolerance <input type="range" id="p-thr" min=".01" max=".3" step=".01" value=".08"></label></div>
+<div class="row"><button id="build">Build result</button><button class="alt" id="pl-out" disabled>▶ Result</button><button class="alt" id="pl-tgt" disabled>▶ Target</button><button class="alt" id="wav" disabled title="Downloads only work when this file is saved and opened locally">Export WAV</button><button class="alt" id="ab">⇄ A/B at current position</button><span id="msg" class="muted" style="margin:0"></span></div>
+<canvas id="cv-cmp"></canvas>
+<div class="leg">Target waveform in cyan, result in green. Overlap means the shapes agree. Click to play from a point. Shift+click a slice to re-roll it with the next-best source slice.</div>
+<div class="score" id="score"></div></section>
+</main>
+<script>
+const $=s=>document.querySelector(s),AC=new(window.AudioContext||window.webkitAudioContext)(),S={},R={};let cur=null,PK=[],BN={},RP=[],SEEK=null;
+const card=(k,t,d)=>`<section class="card"><h2>${t}</h2><p class="muted">${d}</p>
+<label class="drop" id="drop-${k}"><input type="file" accept="audio/*" id="f-${k}" ${k==='src'?'multiple':''} hidden><span id="n-${k}">Drop an audio file here or click to load</span></label>
+<div class="stats" id="st-${k}"></div>
+<div class="row"><label>BPM <input type="number" id="b-${k}" step="0.01" min="40" max="240"></label><label>Nudge ms <input type="number" id="nu-${k}" step="1" value="0"></label><button class="alt" id="rg-${k}">Re-grid</button><button class="alt" id="hf-${k}">½</button><button class="alt" id="db-${k}">×2</button><button class="alt" id="p-${k}">▶ Play</button><button class="alt" id="fw-${k}" title="Tracks tempo drift and swing, then retimes the audio onto a straight grid">Follow tempo/swing</button></div>
+<canvas id="cv-${k}"></canvas><div class="leg">Green lines: beat 1 of each bar. Cream lines: beats 5, 9, 13. Dots: kick (large) and hat/snare (small). Top strip: structure.</div><div class="secs" id="sec-${k}"></div></section>`;
+$('#cards').innerHTML=card('src','1 · Source audio',"The material to slice up. It might say page not responding or something like that, don't panic, it's working its magic.")+card('tgt','2 · Target audio','The structure to imitate.');
+const COL={silence:'#2A2B2E',fade:'#F4F1EA','break':'#52C5E0',groove:'#00A86B',full:'#D20707'};
+function prep(ch,sr){const n=ch[0].length,m=new Float32Array(n);for(const c of ch)for(let i=0;i<n;i++)m[i]+=c[i]/ch.length;
+const lo=new Float32Array(n),hi=new Float32Array(n),a=1-Math.exp(-2*Math.PI*200/sr),b=1-Math.exp(-2*Math.PI*2500/sr);let y=0,z=0;
+for(let i=0;i<n;i++){y+=a*(m[i]-y);z+=b*(m[i]-z);lo[i]=y;hi[i]=m[i]-z}return{ch,m,lo,hi,n,sr}}
+function envs(A){const H=512,F=Math.max(0,Math.floor((A.n-1024)/H)),o=[0,1,2].map(()=>new Float32Array(F));
+for(let t=0;t<F;t++){let s=[0,0,0];for(let j=0;j<1024;j+=2){const i=t*H+j;s[0]+=A.lo[i]**2;s[1]+=A.m[i]**2;s[2]+=A.hi[i]**2}for(let q=0;q<3;q++)o[q][t]=Math.sqrt(s[q]/512)}return o}
+function flux(e){const F=e.length,f=new Float32Array(F);for(let t=1;t<F;t++)f[t]=Math.max(0,Math.log(1+1e3*e[t])-Math.log(1+1e3*e[t-1]));
+const o=new Float32Array(F);for(let t=0;t<F;t++){let s=0,c=0;for(let u=Math.max(0,t-8);u<Math.min(F,t+9);u++){s+=f[u];c++}o[t]=Math.max(0,f[t]-s/c)}return o}
+const corr=(a,b)=>{const n=Math.min(a.length,b.length);let ma=0,mb=0;for(let i=0;i<n;i++){ma+=a[i];mb+=b[i]}ma/=n;mb/=n;let s=0,x=0,y=0;for(let i=0;i<n;i++){s+=(a[i]-ma)*(b[i]-mb);x+=(a[i]-ma)**2;y+=(b[i]-mb)**2}return s/Math.sqrt(x*y+1e-12)};
+function phase(env,fps,bpm){const P=fps*60/bpm;let best=-1,bp=0;for(let p=0;p<P;p+=.5){let s=0,c=0;for(let t=p;t<env.length;t+=P){s+=env[Math.round(t)]||0;c++}s/=c||1;if(s>best){best=s;bp=p}}return[bp,best]}
+function detect(env,fps){const lmin=Math.floor(fps*.3),lmax=Math.ceil(fps),F=env.length;let best=-1,bl=lmin;
+for(let l=lmin;l<=lmax;l++){let s=0;for(let t=0;t<F-l;t++)s+=env[t]*env[t+l];s/=F-l;const bpm=fps*60/l;s*=Math.exp(-.5*(Math.log2(bpm/125)/.9)**2);if(s>best){best=s;bl=l}}
+const b0=fps*60/bl;let bb=b0,bs=-1;for(let b=b0-2.5;b<=b0+2.5;b+=.05){const sc=phase(env,fps,b)[1];if(sc>bs){bs=sc;bb=b}}return bb}
+async function load(k,file,pre){$('#n-'+k).textContent='Analysing '+file.name+'…';try{const buf=pre||await AC.decodeAudioData(await file.arrayBuffer());
+const ch=[];for(let c=0;c<Math.min(2,buf.numberOfChannels);c++)ch.push(buf.getChannelData(c));const A=prep(ch,buf.sampleRate);A.buf=buf;A.name=file.name;
+const[eL,eM,eH]=envs(A);A.fps=A.sr/512;A.fAll=flux(eM);A.fLo=flux(eL);const fh=flux(eH);for(let i=0;i<fh.length;i++)A.fAll[i]+=fh[i]+A.fLo[i];A.pk=peaks(A.m,1600);S[k]=A;
+await new Promise(r=>setTimeout(r));grid(k,detect(A.fAll,A.fps));$('#n-'+k).textContent=file.name}catch(e){$('#n-'+k).textContent='Could not decode that file: '+e.message}}
+function peaks(m,W){const mn=new Float32Array(W),mx=new Float32Array(W),L=m.length/W;for(let x=0;x<W;x++){let a=1e9,b=-1e9;const s=Math.floor(x*L),e=Math.floor((x+1)*L),st=Math.max(1,Math.floor((e-s)/48));for(let i=s;i<e;i+=st){if(m[i]<a)a=m[i];if(m[i]>b)b=m[i]}mn[x]=a>b?0:a;mx[x]=a>b?0:b}return{mn,mx}}
+function grid(k,bpm){const A=S[k];A.bpm=bpm;$('#b-'+k).value=bpm.toFixed(2);const sr=A.sr,bt=60/bpm,p=phase(A.fAll,A.fps,bpm)[0],t0=(p*512+384)/sr;
+const sc=[0,0,0,0];for(let j=0;t0+j*bt<A.n/sr-.1;j++){const f=Math.round(((t0+j*bt)*sr-384)/512);let v=0;for(let d=-1;d<=1;d++)v=Math.max(v,A.fLo[f+d]||0);sc[j%4]+=v}
+const o=sc.indexOf(Math.max(...sc)),d0=t0+o*bt+((+$('#nu-'+k).value)||0)/1000;A.step=bt/4;const kk=Math.floor(d0/A.step);A.g0=d0-kk*A.step;A.pos0=((-kk)%16+16)%16;A.ns=Math.max(1,Math.floor((A.n/sr-A.g0)/A.step));
+const r=new Float32Array(A.ns),lf=new Float32Array(A.ns),zc=new Float32Array(A.ns),at=new Float32Array(A.ns);
+for(let i=0;i<A.ns;i++){const a=Math.round((A.g0+i*A.step)*sr),b=Math.min(A.n,Math.round((A.g0+(i+1)*A.step)*sr)),h=(a+b)>>1;let s=0,l=0,hh=0,e1=0,e2=0,z=0;
+for(let u=a;u<b;u++){const v=A.m[u]**2;s+=v;l+=A.lo[u]**2;hh+=A.hi[u]**2;u<h?e1+=v:e2+=v;if(u>a&&(A.m[u]>0)!==(A.m[u-1]>0))z++}
+r[i]=Math.sqrt(s/(b-a||1));lf[i]=Math.sqrt(l)/(Math.sqrt(l)+Math.sqrt(hh)+1e-9);zc[i]=Math.min(1,z/(b-a||1)*3);at[i]=e1/(e1+e2+1e-12)}
+{let s2=0,c2=0;for(let tt=d0;tt<A.n/sr-.05;tt+=bt){const f=Math.round((tt*sr-384)/512);let v=0;for(let d=-1;d<=1;d++)v=Math.max(v,A.fAll[f+d]||0);s2+=v;c2++}const so=Float32Array.from(A.fAll).sort();A.fit=Math.min(1,s2/(c2||1)/(so[Math.floor(so.length*.9)]||1))}
+A.r=r;A.lf=lf;A.zc=zc;A.at=at;A.maxR=Math.max(...r)||1;A.dn=Array.from(r,v=>20*Math.log10(v/A.maxR+1e-3)/60);structure(A);
+const nb=Math.ceil((A.pos0+A.ns)/16);$('#st-'+k).innerHTML=`<span>Tempo <b>${bpm.toFixed(2)} BPM</b></span><span>Bars <b>${nb}</b></span><span>16th slices <b>${A.ns}</b></span><span>First downbeat <b>${d0.toFixed(2)}s</b></span><span>Length <b>${(A.n/sr).toFixed(1)}s</b></span><span>Grid fit <b>${(A.fit*100|0)}%</b>${A.fit<.5?' · low: tempo may drift or swing, try ½/×2, Nudge or a manual BPM':''}</span>`;
+$('#sec-'+k).innerHTML=A.segs.map(s=>`<span class="chip" style="border-color:${COL[s.l.split('-')[0]]||COL.fade}">Bars ${s.a+1}–${s.b+1} · ${s.l}</span>`).join('');bandFeat(A);draw(k)}
+function structure(A){const nb=Math.ceil((A.pos0+A.ns)/16),br=[],bl=[];for(let b=0;b<nb;b++){const a=Math.max(0,b*16-A.pos0),e=Math.min(A.ns,(b+1)*16-A.pos0);let s=0,l=0;for(let i=a;i<e;i++){s+=A.r[i];l+=A.lf[i]}br.push(s/(e-a||1));bl.push(l/(e-a||1))}
+const so=[...br].sort((x,y)=>x-y),ref=so[Math.floor(so.length*.9)]||1,ml=[...bl].sort((x,y)=>x-y)[bl.length>>1];
+const lab=br.map((v,b)=>{const rel=v/ref;return rel<.08?'silence':(rel<.45||bl[b]<.35*ml)?'break':rel>=.8?'full':'groove'});
+const dir=br.map((v,b)=>b+1<br.length?(br[b+1]>v*1.12?1:br[b+1]<v/1.12?-1:0):0);
+for(let b=0;b<br.length;){let e=b;while(e<br.length&&dir[e]&&dir[e]===dir[b])e++;if(dir[b]&&e-b>=3&&Math.max(br[e],br[b])>1.4*Math.min(br[e],br[b])){for(let u=b;u<=Math.min(e,br.length-1);u++)lab[u]=dir[b]>0?'fade-in':'fade-out';b=e+1}else b++}
+A.segs=[];for(let b=0;b<nb;b++){const l=A.segs[A.segs.length-1];if(l&&l.l===lab[b])l.b=b;else A.segs.push({a:b,b,l:lab[b]})}A.nb=nb}
+function draw(k){const cv=$('#cv-'+k),d=devicePixelRatio||1,w=cv.clientWidth,h=cv.clientHeight;cv.width=w*d;cv.height=h*d;const g=cv.getContext('2d');g.scale(d,d);
+const cs=getComputedStyle(document.documentElement),C=n=>cs.getPropertyValue(n).trim();g.fillStyle=C('--cv');g.fillRect(0,0,w,h);const A=k==='cmp'?S.tgt:S[k];if(!A)return;
+const dur=A.n/A.sr,X=t=>t/dur*w,top=k==='cmp'?4:16,bot=k==='cmp'?4:14,mid=(top+h-bot)/2,H=(h-top-bot)/2;
+if(k!=='cmp'){for(const s of A.segs){g.fillStyle=(COL[s.l.split('-')[0]]||COL.fade)+'cc';g.fillRect(X(A.g0+(s.a*16-A.pos0)*A.step),0,X((s.b-s.a+1)*16*A.step),10)}}
+const px=A.step/dur*w;for(let i=0;i<=A.ns;i++){const p=(A.pos0+i)%16,x=X(A.warp&&k==='cmp'?mp(A.warp.Tn,A.warp.Tw,A.g0+i*A.step):A.g0+i*A.step);if(p===0){g.strokeStyle=C('--acc');g.lineWidth=1.5}else if(p%4===0){g.strokeStyle=C('--wf');g.lineWidth=.8}else if(px>=5){g.strokeStyle=C('--cl');g.lineWidth=.5}else continue;
+if(p%4&&px<5)continue;g.beginPath();g.moveTo(x,top);g.lineTo(x,h-bot);g.stroke()}
+const wf=(pk,c,al)=>{g.fillStyle=c;g.globalAlpha=al;for(let x=0;x<w;x++){const i=Math.min(pk.mn.length-1,Math.floor(x*pk.mn.length/w));g.fillRect(x,mid-pk.mx[i]*H,1,Math.max(1,(pk.mx[i]-pk.mn[i])*H))}g.globalAlpha=1};
+if(k==='cmp'){wf(ob(A).pk,C('--acc2'),.75);if(R.pk)wf(R.pk,C('--acc'),.6)}else{wf(A.pk,C('--wf'),.85);
+if(px>=2.5)for(let i=0;i<A.ns;i++){const x=X(A.g0+(i+.5)*A.step);if(A.lf[i]>.6&&A.r[i]>.35*A.maxR){g.fillStyle=C('--acc');g.beginPath();g.arc(x,h-7,3,0,7);g.fill()}else if(A.lf[i]<.35&&A.r[i]>.2*A.maxR){g.fillStyle=C('--acc2');g.fillRect(x-1,h-10,2,6)}}}
+if(k==='cmp'&&R.err){const tg=S.tgt;for(let i=0;i<tg.ns;i++){g.fillStyle=R.err[i]<3?'#00A86B':R.err[i]<6?'#52C5E0':R.err[i]<10?'#F4F1EA':'#D20707';g.fillRect(X(tg.warp?mp(tg.warp.Tn,tg.warp.Tw,tg.g0+i*tg.step):tg.g0+i*tg.step),h-5,Math.max(1,px+.5),5)}}
+if(cur&&(cur.k===k||(k==='cmp'&&(cur.k==='out'||cur.k==='tgt')))){const x=Math.min(w,(AC.currentTime-cur.t0)/cur.dur*w);g.fillStyle=C('--wf');g.fillRect(x,0,2,h)}}
+function play(k,buf,off=0){const was=cur&&cur.k===k&&!off;stop();if(was)return;AC.resume();const n=AC.createBufferSource();n.buffer=buf;n.connect(AC.destination);n.start(0,off);cur={n,k,t0:AC.currentTime-off,dur:buf.duration};n.onended=()=>{if(cur&&cur.n===n){cur=null;redraw()}};tick()}
+function stop(){if(cur){const n=cur.n;cur=null;try{n.stop()}catch(e){}}redraw()}
+const redraw=()=>['src','tgt','cmp'].forEach(draw);function tick(){if(!cur)return;redraw();requestAnimationFrame(tick)}
+function bandFeat(A,D=1){A.D=D;const stp=A.step/D,n=A.ns*D;for(const q of['dl','dh','al','ah','zh'])A[q]=new Float32Array(n);const rl=[],rh=[];
+for(let i=0;i<n;i++){const a=Math.round((A.g0+i*stp)*A.sr),b=Math.min(A.n,Math.round((A.g0+(i+1)*stp)*A.sr)),h=(a+b)>>1;let l1=0,l2=0,h1=0,h2=0,z=0,pv=0;
+for(let u=a;u<b;u++){const l=A.lo[u]**2,r=A.m[u]-A.lo[u];if(u<h){l1+=l;h1+=r*r}else{l2+=l;h2+=r*r}if(u>a&&(r>0)!==(pv>0))z++;pv=r}
+const L=b-a||1;rl.push(Math.sqrt((l1+l2)/L));rh.push(Math.sqrt((h1+h2)/L));A.al[i]=l1/(l1+l2+1e-12);A.ah[i]=h1/(h1+h2+1e-12);A.zh[i]=Math.min(1,z/L*3)}
+const ml=Math.max(...rl)||1,mh=Math.max(...rh)||1;for(let i=0;i<n;i++){A.dl[i]=20*Math.log10(rl[i]/ml+1e-3)/60;A.dh[i]=20*Math.log10(rh[i]/mh+1e-3)/60}}
+function lp(a,sr){const o=new Float32Array(a.length),c=1-Math.exp(-2*Math.PI*200/sr);let y=0;for(let i=0;i<a.length;i++){y+=c*(a[i]-y);o[i]=y}return o}
+function wav(){if(!R.buf)return;const L=R.buf.length,sr=R.buf.sampleRate,d=new DataView(new ArrayBuffer(44+L*4)),w=(o,s)=>[...s].forEach((c,i)=>d.setUint8(o+i,c.charCodeAt(0)));
+w(0,'RIFF');d.setUint32(4,36+L*4,true);w(8,'WAVEfmt ');d.setUint32(16,16,true);d.setUint16(20,1,true);d.setUint16(22,2,true);d.setUint32(24,sr,true);d.setUint32(28,sr*4,true);d.setUint16(32,4,true);d.setUint16(34,16,true);w(36,'data');d.setUint32(40,L*4,true);
+const c0=R.buf.getChannelData(0),c1=R.buf.getChannelData(1);for(let i=0;i<L;i++){d.setInt16(44+i*4,Math.max(-1,Math.min(1,c0[i]))*32767,true);d.setInt16(46+i*4,Math.max(-1,Math.min(1,c1[i]))*32767,true)}
+const a=document.createElement('a');a.href=URL.createObjectURL(new Blob([d],{type:'audio/wav'}));a.download='beat-mosaic-result.wav';a.click()}
+function build2(){const s=S.src,t=S.tgt;if(!s||!t){$('#msg').textContent='Load both files first.';return}$('#msg').textContent='Building layers…';
+setTimeout(()=>{const sr=t.sr,n=t.n,env=+$('#p-env').value,pw=+$('#p-pos').value,cw=+$('#p-con').value,rw=+$('#p-rep').value;
+const D=+$('#p-res').value||1;for(const A of[s,t])if(A.D!==D)bandFeat(A,D);for(const A of[s,t])if(!A.re)A.re=A.m.map((v,i)=>v-A.lo[i]);
+if(!s.lc){s.lc=s.ch.map(c=>lp(c,sr));s.rc=s.ch.map((c,q)=>c.map((v,u)=>v-s.lc[q][u]))}
+const out=[new Float32Array(n),new Float32Array(n)],uL=new Float32Array(s.ns*D),uH=new Float32Array(s.ns*D),uq=new Set();let pL=-9,pH=-9;PK=[];RP=$('#p-mir').checked?reps(t,+$('#p-thr').value):[];
+const put=(j,sm,tg,chs,tS,L)=>{const sS=(s.g0+j*s.step/D)*sr,sl=s.step/D*sr,rt=1+(+$('#p-str').value)*(sl/L-1),R0=Math.round(.003*sr),ext=Math.max(1,Math.min(Math.round(.012*sr),L>>2));let bo=0,bs=-1e9;
+for(let o=-R0;o<=R0;o+=Math.max(2,R0>>3)){let xy=0,xx=1e-9;for(let u=0;u<L;u+=4){const p=sS+o+u*rt,i0=Math.floor(p),f=p-i0,x=(sm[i0]||0)*(1-f)+(sm[i0+1]||0)*f;xy+=x*tg[tS+u];xx+=x*x}const sc=xy/Math.sqrt(xx);if(sc>bs){bs=sc;bo=o}}
+const PS=$('#p-ps').checked&&Math.abs(sl/L-1)>.01,wp=PS?wplan(sm,sS+bo,sl/L,L+ext,sr):null,x=PS?wapply(sm,wp,L+ext):new Float32Array(L);if(!PS)for(let u=0;u<L;u++){const p=sS+bo+u*rt,i0=Math.floor(p),f=p-i0;x[u]=(sm[i0]||0)*(1-f)+(sm[i0+1]||0)*f}
+const g=[];for(let c=0;c<4;c++){const u0=c*L>>2,u1=(c+1)*L>>2;let a=0,b=0;for(let u=u0;u<u1;u++){a+=tg[tS+u]**2;b+=x[u]**2}g.push(Math.pow(Math.min(8,Math.max(.05,(Math.sqrt(a/(u1-u0||1))+1e-5)/(Math.sqrt(b/(u1-u0||1))+1e-5))),env))}
+out.forEach((o,c)=>{const src=chs[Math.min(c,chs.length-1)],ws=PS?wapply(src,wp,L+ext):null;for(let u=0;u<L+ext;u++){const k=tS+u;if(k>=n)break;const p=sS+bo+u*rt,i0=Math.floor(p),f=p-i0,v=ws?ws[u]:(src[i0]||0)*(1-f)+(src[i0+1]||0)*f,q=Math.min(3,Math.max(0,u/L*4-.5)),c0=Math.floor(q),gn=g[c0]+(g[Math.min(3,c0+1)]-g[c0])*(q-c0);o[k]+=v*gn*Math.min(1,u/48,u<L?1:(L+ext-u)/ext)}})};
+for(let i=0;i<t.ns*D;i++){const pt=(t.pos0*D+i)%(16*D);let bL=0,bH=0,dL=1e9,dH=1e9;const tb=Math.floor((t.pos0*D+i)/(16*D)),i0=RP[tb]!=null&&!BN[i]?i-(tb-RP[tb])*16*D:-1,mir=i0>=0&&PK[i0];if(mir){bL=PK[i0][0];bH=PK[i0][1]}
+for(let j=0;!mir&&j<s.ns*D;j++){const ps=(s.pos0*D+j)%(16*D),pp=pw*(ps===pt?0:ps%(4*D)===pt%(4*D)?.5:ps%(2*D)===pt%(2*D)?.8:1);
+const a=3*(t.al[i]-s.al[j])**2+5*(t.dl[i]-s.dl[j])**2+pp+uL[j]*.1*rw-(j===pL+1?cw*.15:0),b=2*(t.ah[i]-s.ah[j])**2+2*(t.zh[i]-s.zh[j])**2+4*(t.dh[i]-s.dh[j])**2+pp+uH[j]*.1*rw-(j===pH+1?cw*.15:0);
+if(a<dL&&!(BN[i]&&BN[i].has('L'+j))){dL=a;bL=j}if(b<dH&&!(BN[i]&&BN[i].has('H'+j))){dH=b;bH=j}}
+uL[bL]++;uH[bH]++;pL=bL;pH=bH;PK[i]=[bL,bH];uq.add(bL);uq.add(bH);const tS=Math.round((t.g0+i*t.step/D)*sr),tE=Math.min(n,Math.round((t.g0+(i+1)*t.step/D)*sr)),L=tE-tS;if(L<8)continue;
+put(bL,s.lo,t.lo,s.lc,tS,L);put(bH,s.re,t.re,s.rc,tS,L)}
+let pk=0;for(const c of out)for(let i=0;i<n;i++)pk=Math.max(pk,Math.abs(c[i]));if(pk>.99)for(const c of out)for(let i=0;i<n;i++)c[i]*=.99/pk;
+const buf=AC.createBuffer(2,n,sr);out.forEach((c,i)=>buf.copyToChannel(c,i));const P=prep(out,sr);Object.assign(R,P,{buf,pk:peaks(P.m,1600)});
+R.err=new Float32Array(t.ns);for(let i=0;i<t.ns;i++){const a=Math.round((t.g0+i*t.step)*sr),b=Math.min(n,Math.round((t.g0+(i+1)*t.step)*sr));let q=0;for(let u=a;u<b;u++)q+=P.m[u]**2;R.err[i]=Math.abs(20*Math.log10((Math.sqrt(q/(b-a||1))+1e-4)/(t.r[i]+1e-4)))}
+if(t.warp){const o=t.warp,u=out.map(c=>remap(c,o.Tw,o.Tn,sr,o.orig.n)),b2=AC.createBuffer(2,o.orig.n,sr);u.forEach((c,i)=>b2.copyToChannel(c,i));const P2=prep(u,sr);Object.assign(R,P2,{buf:b2,pk:peaks(P2.m,1600)})}
+const[tl,tm,th]=envs(ob(t)),[rl,rm,rh]=envs(R);$('#score').innerHTML=`<span>Full-band envelope match <b>${(100*Math.max(0,corr(tm,rm))).toFixed(1)}%</b></span><span>Low band (kick/bass) <b>${(100*Math.max(0,corr(tl,rl))).toFixed(1)}%</b></span><span>High band (hats) <b>${(100*Math.max(0,corr(th,rh))).toFixed(1)}%</b></span>`;
+$('#msg').textContent=`${t.ns} target slices rebuilt as bass + top layers from ${uq.size} distinct source slices. Strip under the waveform: green = close loudness match, red = far.`;$('#pl-out').disabled=$('#pl-tgt').disabled=$('#wav').disabled=false;redraw();if(SEEK!=null){play('out',R.buf,SEEK);SEEK=null}},30)}
+function reps(A,th){const nb=Math.ceil((A.pos0+A.ns)/16),v=[],o=[];for(let b=0;b<nb;b++){const a=b*16-A.pos0;v.push(a<0||a+16>A.ns?null:Array.from({length:16},(_,u)=>[A.dn[a+u],A.lf[a+u]]))}
+for(let b=0;b<nb;b++){if(!v[b])continue;for(let c=0;c<b;c++){if(!v[c])continue;let d=0;for(let u=0;u<16;u++)d+=Math.abs(v[b][u][0]-v[c][u][0])+Math.abs(v[b][u][1]-v[c][u][1]);if(d/16<th){o[b]=o[c]!=null?o[c]:c;break}}}return o}
+async function loadPool(files){const items=[];for(const f of files){await load('src',f);items.push(S.src)}
+const b=items[0],sr=b.sr,bar=16*b.step*sr,parts=[];let tot=0;
+for(const A of items){let r=A.bpm/b.bpm;while(r>1.4)r/=2;while(r<.7)r*=2;const st=Math.round((A.g0+((16-A.pos0)%16)*A.step)*sr),len=Math.floor((A.n-st)/r),pad=Math.ceil(len/bar)*bar;parts.push({A,st,r,len,at:tot});tot+=pad}
+const buf=AC.createBuffer(2,tot,sr);for(let c=0;c<2;c++){const o=new Float32Array(tot);for(const p of parts){const src=p.A.ch[Math.min(c,p.A.ch.length-1)];if(Math.abs(p.r-1)>.005){p.wp=p.wp||wplan(p.A.m,p.st,p.r,p.len,sr);o.set(wapply(src,p.wp,p.len),p.at)}else for(let u=0;u<p.len;u++){const q=p.st+u*p.r,i0=Math.floor(q),f=q-i0;o[p.at+u]=(src[i0]||0)*(1-f)+(src[i0+1]||0)*f}}buf.copyToChannel(o,c)}
+await load('src',{name:'Pool of '+items.length+' files, tempo-matched'},buf);grid('src',b.bpm)}
+function wplan(a,st,ratio,Lx,sr){const N=Math.max(64,Math.round(.02*sr))&~1,Hs=N>>1,Dl=N>>2,p=[];let prev=0;
+for(let k=0;k*Hs<Lx;k++){const tg=Math.round(st+k*Hs*ratio);let best=tg;
+if(k>0){const ref=prev+Hs;let bc=-1e18;for(let d=-Dl;d<=Dl;d+=4){const q=tg+d;let c=0,e=1e-9;for(let i=0;i<Hs;i+=4){const v=a[q+i]||0;c+=v*(a[ref+i]||0);e+=v*v}c/=Math.sqrt(e);if(c>bc){bc=c;best=q}}}
+p.push(best);prev=best}return{p,N}}
+function wapply(a,pl,Lx){const N=pl.N,Hs=N>>1,o=new Float32Array(Lx);for(let k=0;k<pl.p.length;k++){const p0=pl.p[k],b=k*Hs;for(let i=0;i<N&&b+i<Lx;i++){const w=k===0&&i<Hs?1:.5-.5*Math.cos(2*Math.PI*(i+.5)/N);o[b+i]+=(a[p0+i]||0)*w}}return o}
+const ob=A=>A.warp?A.warp.orig:A;
+function mp(K1,K2,t){let lo=0,hi=K1.length-1;if(t<=K1[0])return K2[0]+t-K1[0];if(t>=K1[hi])return K2[hi]+t-K1[hi];while(hi-lo>1){const m=(lo+hi)>>1;K1[m]>t?hi=m:lo=m}return K2[lo]+(t-K1[lo])/(K1[hi]-K1[lo])*(K2[hi]-K2[lo])}
+function remap(a,OK,RK,sr,n){const o=new Float32Array(n),m=OK.length;for(let i=0;i<m-1;i++){const s0=Math.max(0,Math.ceil(OK[i]*sr)),s1=Math.min(n,Math.ceil(OK[i+1]*sr)),rk=(RK[i+1]-RK[i])/(OK[i+1]-OK[i]);
+for(let u=s0;u<s1;u++){const p=(RK[i]+(u/sr-OK[i])*rk)*sr,i0=Math.floor(p),f=p-i0;o[u]=(a[i0]||0)*(1-f)+(a[i0+1]||0)*f}}
+for(let u=0;u<Math.min(n,Math.ceil(OK[0]*sr));u++)o[u]=a[u]||0;for(let u=Math.max(0,Math.ceil(OK[m-1]*sr));u<n;u++)o[u]=a[u]||0;return o}
+async function follow(k){const A=S[k];if(!A)return;const nm=A.name,fit0=A.fit;
+if(A.warp){const o=A.warp.orig;await load(k,{name:o.name},o.buf);grid(k,o.bpm);return}
+$('#n-'+k).textContent='Following tempo…';await new Promise(r=>setTimeout(r,20));
+const sr=A.sr,H=512,st=A.step,ns=A.ns,Tn=Float64Array.from({length:ns+1},(_,i)=>A.g0+i*st),bs=[];for(let i=0;i<=ns;i++)if((A.pos0+i)%4===0)bs.push(i);
+if(bs.length<3){$('#n-'+k).textContent=nm+' · too short to follow';return}
+const R_=Math.max(2,Math.round(.3*st*sr/H)),S_=2*R_+1,so=Float32Array.from(A.fAll).sort(),p9=so[Math.floor(so.length*.9)]||1,
+fl=t=>{const f=(t*sr-384)/H,i=Math.floor(f),q=f-i;return((A.fAll[i]||0)*(1-q)+(A.fAll[i+1]||0)*q)/p9},em=s=>.05*((s-R_)/R_)**2;
+let sc=Float32Array.from({length:S_},(_,s)=>fl(Tn[bs[0]]+(s-R_)*H/sr)-em(s));const bk=[];
+for(let b=1;b<bs.length;b++){const row=new Float32Array(S_),bp=new Int16Array(S_);for(let s=0;s<S_;s++){let be=-1e9,bi=0;for(let q=0;q<S_;q++){const v=sc[q]-.4*((s-q)/R_)**2;if(v>be){be=v;bi=q}}row[s]=be+fl(Tn[bs[b]]+(s-R_)*H/sr)-em(s);bp[s]=bi}sc=row;bk.push(bp)}
+let s=sc.indexOf(Math.max(...sc));const bo=new Float64Array(bs.length);for(let b=bs.length-1;b>=0;b--){bo[b]=(s-R_)*H/sr;if(b>0)s=bk[b-1][s]}
+const dr=new Float64Array(ns+1);for(let i=0,b=0;i<=ns;i++){while(b<bs.length-2&&bs[b+1]<=i)b++;const a=bs[b],c=bs[b+1],f=Math.min(1,Math.max(0,(i-a)/(c-a)));dr[i]=bo[b]*(1-f)+bo[b+1]*f}
+const sw=[0,0,0,0];for(let q=1;q<4;q++){const h=new Float64Array(S_);for(let i=0;i<=ns;i++)if((A.pos0+i)%4===q)for(let s=0;s<S_;s++)h[s]+=fl(Tn[i]+dr[i]+(s-R_)*H/sr);sw[q]=(h.indexOf(Math.max(...h))-R_)*H/sr}
+const Tw=new Float64Array(ns+1);for(let i=0;i<=ns;i++){Tw[i]=Tn[i]+dr[i]+sw[(A.pos0+i)%4];if(i&&Tw[i]<Tw[i-1]+.25*st)Tw[i]=Tw[i-1]+.25*st}
+const wb=AC.createBuffer(2,A.n,sr);for(let c=0;c<2;c++)wb.copyToChannel(remap(A.ch[Math.min(c,A.ch.length-1)],Tn,Tw,sr,A.n),c);
+await load(k,{name:nm+' (straightened)'},wb);S[k].warp={Tn,Tw,orig:A};grid(k,A.bpm);
+$('#n-'+k).textContent=nm+' · straightened, grid fit '+(fit0*100|0)+'% → '+(S[k].fit*100|0)+'%. Click the button again to undo.'}
+for(const k of['src','tgt']){const f=$('#f-'+k),dz=$('#drop-'+k);f.onchange=()=>f.files[0]&&(k==='src'&&f.files.length>1?loadPool([...f.files]):load(k,f.files[0]));
+dz.ondragover=e=>{e.preventDefault();dz.classList.add('on')};dz.ondragleave=()=>dz.classList.remove('on');dz.ondrop=e=>{e.preventDefault();dz.classList.remove('on');e.dataTransfer.files[0]&&(k==='src'&&e.dataTransfer.files.length>1?loadPool([...e.dataTransfer.files]):load(k,e.dataTransfer.files[0]))};
+$('#rg-'+k).onclick=()=>S[k]&&grid(k,+$('#b-'+k).value);$('#hf-'+k).onclick=()=>S[k]&&grid(k,S[k].bpm/2);$('#db-'+k).onclick=()=>S[k]&&grid(k,S[k].bpm*2);$('#p-'+k).onclick=()=>S[k]&&play(k,S[k].buf);$('#fw-'+k).onclick=()=>follow(k)}
+$('#build').onclick=()=>{BN={};build2()};$('#wav').onclick=wav;
+$('#ab').onclick=()=>{if(!cur||!R.buf)return;const pos=AC.currentTime-cur.t0,to=cur.k==='out'?'tgt':'out';play(to,to==='out'?R.buf:ob(S.tgt).buf,pos)};
+for(const k of['src','tgt','cmp'])$('#cv-'+k).onclick=e=>{const A=k==='cmp'?(R.buf?{buf:R.buf,key:'out'}:S.tgt&&{buf:ob(S.tgt).buf,key:'tgt'}):S[k]&&{buf:S[k].buf,key:k};if(!A)return;const r=e.currentTarget.getBoundingClientRect(),tm=(e.clientX-r.left)/r.width*A.buf.duration;
+if(k==='cmp'&&e.shiftKey&&R.buf){const D=S.src.D||1,i=Math.floor(((S.tgt.warp?mp(S.tgt.warp.Tw,S.tgt.warp.Tn,tm):tm)-S.tgt.g0)/(S.tgt.step/D));if(PK[i]){BN[i]=BN[i]||new Set();BN[i].add('L'+PK[i][0]);BN[i].add('H'+PK[i][1]);SEEK=Math.max(0,tm-.5);build2();return}}
+play(A.key,A.buf,tm)};$('#pl-out').onclick=()=>R.buf&&play('out',R.buf);$('#pl-tgt').onclick=()=>S.tgt&&play('tgt',ob(S.tgt).buf);
+addEventListener('resize',redraw);matchMedia('(prefers-color-scheme:dark)').onchange=redraw;redraw();
+</script></body></html>

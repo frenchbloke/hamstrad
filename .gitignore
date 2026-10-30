@@ -1,0 +1,9 @@
+# Editor/OS
+.vscode/
+*.code-workspace
+.DS_Store
+Thumbs.db
+
+# Temp
+*.tmp
+tmp_check.js
