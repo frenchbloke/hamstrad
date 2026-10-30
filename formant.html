@@ -45,6 +45,7 @@ canvas{border:1.5px solid var(--ink)}.muted,.leg{opacity:.85}
 <label>Slice detail <select id="p-res"><option value="1">16th notes</option><option value="2">32nd notes</option></select></label>
 <label><input type="checkbox" id="p-mir" checked> Mirror repeated bars</label>
 <label><input type="checkbox" id="p-ps" checked> Pitch-preserving stretch (WSOLA)</label>
+<label><input type="checkbox" id="p-formant"> Formant pitch-shift (experimental)</label>
 <label>Repeat tolerance <input type="range" id="p-thr" min=".01" max=".3" step=".01" value=".08"></label></div>
 <div class="row"><button id="build">Build result</button><button class="alt" id="pl-out" disabled>▶ Result</button><button class="alt" id="pl-tgt" disabled>▶ Target</button><button class="alt" id="wav" disabled title="Downloads only work when this file is saved and opened locally">Export WAV</button><button class="alt" id="ab">⇄ A/B at current position</button><span id="msg" class="muted" style="margin:0"></span></div>
 <canvas id="cv-cmp"></canvas>
@@ -52,7 +53,7 @@ canvas{border:1.5px solid var(--ink)}.muted,.leg{opacity:.85}
 <div class="score" id="score"></div></section>
 </main>
 <script>
-const $=s=>document.querySelector(s),AC=new(window.AudioContext||window.webkitAudioContext)(),S={},R={};let cur=null,PK=[],BN={},RP=[],SEEK=null;
+const $=s=>document.querySelector(s),AC=new(window.AudioContext||window.webkitAudioContext)(),S={},R={};let cur=null,PK=[],BN={},RP=[],SEEK=null,FORMANT_FN=null;
 const card=(k,t,d)=>`<section class="card"><h2>${t}</h2><p class="muted">${d}</p>
 <label class="drop" id="drop-${k}"><input type="file" accept="audio/*" id="f-${k}" ${k==='src'?'multiple':''} hidden><span id="n-${k}">Drop an audio file here or click to load</span></label>
 <div class="stats" id="st-${k}"></div>
@@ -184,6 +185,7 @@ for(const k of['src','tgt']){const f=$('#f-'+k),dz=$('#drop-'+k);f.onchange=()=>
 dz.ondragover=e=>{e.preventDefault();dz.classList.add('on')};dz.ondragleave=()=>dz.classList.remove('on');dz.ondrop=e=>{e.preventDefault();dz.classList.remove('on');e.dataTransfer.files[0]&&(k==='src'&&e.dataTransfer.files.length>1?loadPool([...e.dataTransfer.files]):load(k,e.dataTransfer.files[0]))};
 $('#rg-'+k).onclick=()=>S[k]&&grid(k,+$('#b-'+k).value);$('#hf-'+k).onclick=()=>S[k]&&grid(k,S[k].bpm/2);$('#db-'+k).onclick=()=>S[k]&&grid(k,S[k].bpm*2);$('#p-'+k).onclick=()=>S[k]&&play(k,S[k].buf);$('#fw-'+k).onclick=()=>follow(k)}
 $('#build').onclick=()=>{BN={};build2()};$('#wav').onclick=wav;
+$('#p-formant').onchange=async()=>{if($('#p-formant').checked&&!FORMANT_FN){try{const m=await import('https://cdn.jsdelivr.net/npm/@audio/shift/+esm');FORMANT_FN=m.formant;if(!FORMANT_FN)throw new Error('no formant export');$('#msg').textContent='Formant module loaded'}catch(e){$('#p-formant').checked=false;$('#msg').textContent='Formant module failed: '+e.message}}};
 $('#ab').onclick=()=>{if(!cur||!R.buf)return;const pos=AC.currentTime-cur.t0,to=cur.k==='out'?'tgt':'out';play(to,to==='out'?R.buf:ob(S.tgt).buf,pos)};
 for(const k of['src','tgt','cmp'])$('#cv-'+k).onclick=e=>{const A=k==='cmp'?(R.buf?{buf:R.buf,key:'out'}:S.tgt&&{buf:ob(S.tgt).buf,key:'tgt'}):S[k]&&{buf:S[k].buf,key:k};if(!A)return;const r=e.currentTarget.getBoundingClientRect(),tm=(e.clientX-r.left)/r.width*A.buf.duration;
 if(k==='cmp'&&e.shiftKey&&R.buf){const D=S.src.D||1,i=Math.floor(((S.tgt.warp?mp(S.tgt.warp.Tw,S.tgt.warp.Tn,tm):tm)-S.tgt.g0)/(S.tgt.step/D));if(PK[i]){BN[i]=BN[i]||new Set();BN[i].add('L'+PK[i][0]);BN[i].add('H'+PK[i][1]);SEEK=Math.max(0,tm-.5);build2();return}}
