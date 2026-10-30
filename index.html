@@ -97,7 +97,7 @@ A.segs=[];for(let b=0;b<nb;b++){const l=A.segs[A.segs.length-1];if(l&&l.l===lab[
 function draw(k){const cv=$('#cv-'+k),d=devicePixelRatio||1,w=cv.clientWidth,h=cv.clientHeight;cv.width=w*d;cv.height=h*d;const g=cv.getContext('2d');g.scale(d,d);
 const cs=getComputedStyle(document.documentElement),C=n=>cs.getPropertyValue(n).trim();g.fillStyle=C('--cv');g.fillRect(0,0,w,h);const A=k==='cmp'?S.tgt:S[k];if(!A)return;
 const dur=A.n/A.sr,X=t=>t/dur*w,top=k==='cmp'?4:16,bot=k==='cmp'?4:14,mid=(top+h-bot)/2,H=(h-top-bot)/2;
-if(k!=='cmp'){for(const s of A.segs){g.fillStyle=(COL[s.l.split('-')[0]]||COL.fade)+'cc';g.fillRect(X(A.g0+(s.a*16-A.pos0)*A.step),0,X((s.b-s.a+1)*16*A.step),10)}}
+if(k!=='cmp'&&A.segs){for(const s of A.segs){g.fillStyle=(COL[s.l.split('-')[0]]||COL.fade)+'cc';g.fillRect(X(A.g0+(s.a*16-A.pos0)*A.step),0,X((s.b-s.a+1)*16*A.step),10)}}
 const px=A.step/dur*w;for(let i=0;i<=A.ns;i++){const p=(A.pos0+i)%16,x=X(A.warp&&k==='cmp'?mp(A.warp.Tn,A.warp.Tw,A.g0+i*A.step):A.g0+i*A.step);if(p===0){g.strokeStyle=C('--acc');g.lineWidth=1.5}else if(p%4===0){g.strokeStyle=C('--wf');g.lineWidth=.8}else if(px>=5){g.strokeStyle=C('--cl');g.lineWidth=.5}else continue;
 if(p%4&&px<5)continue;g.beginPath();g.moveTo(x,top);g.lineTo(x,h-bot);g.stroke()}
 const wf=(pk,c,al)=>{g.fillStyle=c;g.globalAlpha=al;for(let x=0;x<w;x++){const i=Math.min(pk.mn.length-1,Math.floor(x*pk.mn.length/w));g.fillRect(x,mid-pk.mx[i]*H,1,Math.max(1,(pk.mx[i]-pk.mn[i])*H))}g.globalAlpha=1};
